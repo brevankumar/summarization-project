@@ -55,6 +55,14 @@ Email: brevankumar@gmail.com
 
 ```
 
+AWS Cloud Deployment link for users to predict the target 'summary' from the large text
+
+```
+http://50.16.43.186:8080/docs
+
+Note: The training time it takes nearly 20 - 30 min in the FastAPI. So, be patient until it takes time to train the model.
+```
+
 
 
 # AWS-CICD-Deployment-with-Github-Actions
