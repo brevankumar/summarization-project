@@ -1,34 +1,16 @@
-import boto3
+from datasets import load_dataset
 import os
 
-aws_access_key_id = 'AKIASU2C6O4I6EX34RZO'
-aws_secret_access_key = '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'
-aws_region = 'us-east-1'
+# Specify the dataset you want to download
+dataset_name = "Revankumar/News_room"  # Change this to the dataset you want to use
 
+# Load the dataset
+dataset = load_dataset(dataset_name)
 
+folder_path = "artifacts/Data ingestion"
+os.makedirs(folder_path, exist_ok=True)
 
-client = boto3.client('s3', aws_access_key_id=aws_access_key_id, 
-                            aws_secret_access_key=aws_secret_access_key, 
-                            region_name=aws_region)
+# Save the dataset to the target folder
+dataset.save_to_disk(folder_path)
 
-bucket = 'rev.nlpdata'
-
-cur_path = os.getcwd()
-
-file= 'dataset.zip' 
-
-filename = os.path.join(cur_path, 'artifacts\Data_ingestion', file)
-
-
-
-client.download_file(
-                    Bucket = bucket,
-                    Key=file,
-                    Filename=filename
-                    )
-
-downloads_dir = os.path.join(cur_path,'artifacts\Data_ingestion')
-
-for root, dirs, files in os.walk(downloads_dir): 
-    for filename in files: 
-        print(filename)
+print(f"Dataset {dataset_name} saved to {folder_path}")

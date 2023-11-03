@@ -5,6 +5,8 @@ from textSummarizer.logging import logger
 from textSummarizer.utils.common import get_size
 from textSummarizer.entity import DataIngestionConfig
 from pathlib import Path
+from datasets import load_dataset
+
 
 
 
@@ -14,25 +16,20 @@ class DataIngestion:
 
 
     
-    def download_file(self):
-        if not os.path.exists(self.config.local_data_file):
-            filename, headers = request.urlretrieve(
-                url = self.config.source_URL,
-                filename = self.config.local_data_file
-            )
-            logger.info(f"{filename} download! with following info: \n{headers}")
-        else:
-            logger.info(f"File already exists of size: {get_size(Path(self.config.local_data_file))}")  
+    def download_files_from_huggingface(self):
+
+        # Specify the dataset you want to download
+        dataset_name = self.config.DATASET_NAME  
+
+        # Load the dataset
+        dataset = load_dataset(dataset_name)
+
+        folder_path = "artifacts/data_ingestion/newsroom_dataset"
+        os.makedirs(folder_path, exist_ok=True)
+
+        # Save the dataset to the target folder
+        dataset.save_to_disk(folder_path)
+
+        print(f"Dataset {dataset_name} saved to {folder_path}") 
 
         
-    
-    def extract_zip_file(self):
-        """
-        zip_file_path: str
-        Extracts the zip file into the data directory
-        Function returns None
-        """
-        unzip_path = self.config.unzip_dir
-        os.makedirs(unzip_path, exist_ok=True)
-        with zipfile.ZipFile(self.config.local_data_file, 'r') as zip_ref:
-            zip_ref.extractall(unzip_path)

@@ -13,7 +13,7 @@ class DataTransformation:
 
     
     def convert_examples_to_features(self,example_batch):
-        input_encodings = self.tokenizer(example_batch['dialogue'] , max_length = 1024, truncation = True )
+        input_encodings = self.tokenizer(example_batch['text'] , max_length = 1024, truncation = True )
         
         with self.tokenizer.as_target_tokenizer():
             target_encodings = self.tokenizer(example_batch['summary'], max_length = 128, truncation = True )
@@ -26,6 +26,6 @@ class DataTransformation:
     
 
     def convert(self):
-        dataset_samsum = load_from_disk(self.config.data_path)
-        dataset_samsum_pt = dataset_samsum.map(self.convert_examples_to_features, batched = True)
-        dataset_samsum_pt.save_to_disk(os.path.join(self.config.root_dir,"samsum_dataset"))
+        dataset_newsroom = load_from_disk(self.config.data_path)
+        dataset_newsroom_pt = dataset_newsroom.map(self.convert_examples_to_features, batched = True)
+        dataset_newsroom_pt.save_to_disk(os.path.join(self.config.root_dir,"newsroom_dataset"))
