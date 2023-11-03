@@ -17,8 +17,8 @@ class ModelTrainer:
     def train(self):
         device = "cuda" if torch.cuda.is_available() else "cpu"
         tokenizer = AutoTokenizer.from_pretrained(self.config.model_ckpt)
-        model_pegasus = AutoModelForSeq2SeqLM.from_pretrained(self.config.model_ckpt).to(device)
-        seq2seq_data_collator = DataCollatorForSeq2Seq(tokenizer, model=model_pegasus)
+        model_t5 = AutoModelForSeq2SeqLM.from_pretrained(self.config.model_ckpt).to(device)
+        seq2seq_data_collator = DataCollatorForSeq2Seq(tokenizer, model=model_t5)
         
         #loading data 
         dataset_samsum_pt = load_from_disk(self.config.data_path)
@@ -40,14 +40,14 @@ class ModelTrainer:
             gradient_accumulation_steps=16
         ) 
 
-        trainer = Trainer(model=model_pegasus, args=trainer_args,
+        trainer = Trainer(model=model_t5, args=trainer_args,
                   tokenizer=tokenizer, data_collator=seq2seq_data_collator,
-                  train_dataset=dataset_samsum_pt["train"], 
+                  train_dataset=dataset_samsum_pt["test"], 
                   eval_dataset=dataset_samsum_pt["validation"])
         
         trainer.train()
 
         ## Save model
-        model_pegasus.save_pretrained(os.path.join(self.config.root_dir,"pegasus-samsum-model"))
+        model_t5.save_pretrained(os.path.join(self.config.root_dir,"t5-small-newsroom-model"))
         ## Save tokenizer
         tokenizer.save_pretrained(os.path.join(self.config.root_dir,"tokenizer"))
