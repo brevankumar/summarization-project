@@ -7,7 +7,6 @@ from starlette.responses import RedirectResponse
 from fastapi.responses import Response
 from textSummarizer.pipeline.prediction import PredictionPipeline
 
-
 text:str = "What is Text Summarization?"
 
 app = FastAPI()
@@ -39,8 +38,6 @@ async def predict_route(text):
     except Exception as e:
         raise e
     
-
-
 
 if __name__=="__main__":
     uvicorn.run(app, host="0.0.0.0", port=8080)
